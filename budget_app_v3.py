@@ -55,7 +55,7 @@ def recalc_working_capital():
 def compute_df_total(df_budget: pd.DataFrame) -> pd.DataFrame:
     totals = df_budget.select_dtypes(include="number").sum()  # Sum only numeric columns - totals is a series!
     df_total = pd.DataFrame([totals])  # one-row DataFrame
-    df_total["team"] = "EST Total"
+    df_total["team"] = "EST"
 
     # Ensure column order matches df_budget
     df_total = df_total.reindex(columns=df_budget.columns)
