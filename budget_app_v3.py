@@ -212,6 +212,16 @@ if "df_budget" in st.session_state:
     col4, col5, col6 = st.columns([1, 5, 1])
     with col5:
         st.write("### Summary by Team")
+        budget_editor_configuration = {
+            "team": st.column_config.TextColumn("Team", disabled=True),
+            "post_saving": st.column_config.NumberColumn("Post Saving", format="localized", disabled=True),
+            "income_plan": st.column_config.NumberColumn("Income Plan", format="localized"),
+            "corporate_technical_activities": st.column_config.NumberColumn("Corporate Technical Activities", format="localized"),
+            "lapsed_cost": st.column_config.NumberColumn("Lapsed Cost", format="localized", disabled=True),
+            "nshr_cost": st.column_config.NumberColumn("NSHR Cost", format="localized"),
+            "subscriptions": st.column_config.NumberColumn("Subscriptions", format="localized"),
+            "team_allocation": st.column_config.NumberColumn("Team Allocation", format="localized"),
+            "working_capital": st.column_config.NumberColumn("Working Capital", format="localized", disabled=True)}
         
         # Editable table
         df_budget = st.data_editor(
@@ -219,16 +229,7 @@ if "df_budget" in st.session_state:
             key="budget_editor",
             hide_index=True,
             on_change=recalc_working_capital,
-            column_config={
-                "team": st.column_config.TextColumn("Team", disabled=True),
-                "post_saving": st.column_config.NumberColumn("Post Saving", format="localized", disabled=True),
-                "income_plan": st.column_config.NumberColumn("Income Plan", format="localized"),
-                "corporate_technical_activities": st.column_config.NumberColumn("Corporate Technical Activities", format="localized"),
-                "lapsed_cost": st.column_config.NumberColumn("Lapsed Cost", format="localized", disabled=True),
-                "nshr_cost": st.column_config.NumberColumn("NSHR Cost", format="localized"),
-                "subscriptions": st.column_config.NumberColumn("Subscriptions", format="localized"),
-                "team_allocation": st.column_config.NumberColumn("Team Allocation", format="localized"),
-                "working_capital": st.column_config.NumberColumn("Working Capital", format="localized", disabled=True)},
+            column_config=budget_editor_configuration,
             )
 
         df_total = compute_df_total(df_budget)
@@ -237,7 +238,5 @@ if "df_budget" in st.session_state:
             df_total,
             hide_index=True,
             use_container_width=True,
+            column_config=budget_editor_configuration,
             )
-
-
-
