@@ -45,6 +45,23 @@ def upload_file(table_name, required_columns):
         return None
     return df
 
+def recalc_working_capital():
+    d = st.session_state['df_budget']
+    for index, row in st.session_state['budget_editor']['edited_rows'].items():
+        for col, value in row.items():
+            d.at[index, col] = value # updating summary_df with summary_editor
+    d["working_capital"] = d["post_saving"] + d["corporate_technical_activities"] + d["income_plan"] + d["team_allocation"] - d["lapsed_cost"] - d["nshr_cost"] - d["subscriptions"]
+    df_total = compute_df_total(d)
+
+def compute_df_total(df_budget: pd.DataFrame) -> pd.DataFrame:
+    totals = df_budget.select_dtypes(include="number").sum()  # Sum only numeric columns - totals is a series!
+    df_total = pd.DataFrame([totals])  # one-row DataFrame
+    df_total["team"] = "EST Total"
+
+    # Ensure column order matches df_budget
+    df_total = df_total.reindex(columns=df_budget.columns)
+
+    return df_total
 
 
 # Data Upload
@@ -82,6 +99,7 @@ with col2:
             if "df_budget" not in st.session_state:
                 st.session_state["df"] = df.copy()
                 st.session_state["df_budget"] = df_budget.copy()
+                df_total = compute_df_total(df_budget)
 
             
     with tab2: # need to use differnt variables to avoid ovrewriting df
@@ -95,6 +113,7 @@ with col2:
             if "df_budget" not in st.session_state:
                 st.session_state["df"] = df.copy()
                 st.session_state["df_budget"] = df_budget.copy()
+                df_total = compute_df_total(df_budget)
 
 # Data Management
 # "df_budget" in st.session_state works as a flag of occurred upload
@@ -194,13 +213,6 @@ if "df_budget" in st.session_state:
     with col5:
         st.write("### Summary by Team")
         
-        def recalc_working_capital():
-            d = st.session_state['df_budget']
-            for index, row in st.session_state['budget_editor']['edited_rows'].items():
-                for col, value in row.items():
-                    d.at[index, col] = value # updating summary_df with summary_editor
-            d["working_capital"] = d["post_saving"] + d["corporate_technical_activities"] + d["income_plan"] + d["team_allocation"] - d["lapsed_cost"] - d["nshr_cost"] - d["subscriptions"]
-
         # Editable table
         df_budget = st.data_editor(
             df_budget,
@@ -217,3 +229,13 @@ if "df_budget" in st.session_state:
                 "team_allocation": st.column_config.NumberColumn("Team Allocation", format="localized"),
                 "working_capital": st.column_config.NumberColumn("Working Capital", format="localized", disabled=True)},
             )
+
+
+        st.dataframe(
+            df_total,
+            hide_index=True,
+            use_container_width=True,
+            )
+
+
+
