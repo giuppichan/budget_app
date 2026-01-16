@@ -51,7 +51,6 @@ def recalc_working_capital():
         for col, value in row.items():
             d.at[index, col] = value # updating summary_df with summary_editor
     d["working_capital"] = d["post_saving"] + d["corporate_technical_activities"] + d["income_plan"] + d["team_allocation"] - d["lapsed_cost"] - d["nshr_cost"] - d["subscriptions"]
-    df_total = compute_df_total(d)
 
 def compute_df_total(df_budget: pd.DataFrame) -> pd.DataFrame:
     totals = df_budget.select_dtypes(include="number").sum()  # Sum only numeric columns - totals is a series!
@@ -232,6 +231,7 @@ if "df_budget" in st.session_state:
                 "working_capital": st.column_config.NumberColumn("Working Capital", format="localized", disabled=True)},
             )
 
+        df_total = compute_df_total(df_budget)
 
         st.dataframe(
             df_total,
