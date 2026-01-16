@@ -193,6 +193,7 @@ if "df_budget" in st.session_state:
     df = st.data_editor(
         df,
         key="position_listing",
+        hide_index=True,
         column_config={
             "team": st.column_config.TextColumn("Team", disabled=True),
             "position_grade": st.column_config.TextColumn("Position Grade", disabled=True),
@@ -217,6 +218,7 @@ if "df_budget" in st.session_state:
         df_budget = st.data_editor(
             df_budget,
             key="budget_editor",
+            hide_index=True,
             on_change=recalc_working_capital,
             column_config={
                 "team": st.column_config.TextColumn("Team", disabled=True),
