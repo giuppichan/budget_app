@@ -11,8 +11,12 @@ import pandas as pd
 import numpy as np
 import locale
 #locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
-st.set_page_config(layout="wide")
-st.title("TEST for refresh latency")
+
+st.set_page_config(
+    page_title="EST Budget",
+    page_icon="💼",
+    layout="wide",
+)
 
 position_list_columns = ["team", "position_grade", "incumbent", "incumbent_grade", "occupancy_status", "start_month", "end_month", "months_filled", "months_vacant", "monthly_rate_filled", "monthly_rate_vacant", "post_saving", "lapsed_cost"]
 budget_columns = ["team", "post_saving", "corporate_technical_activities", "income_plan", "lapsed_cost", "nshr_cost", "subscriptions", "team_allocation", "working_capital"]
